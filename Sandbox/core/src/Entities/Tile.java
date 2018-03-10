@@ -1,11 +1,10 @@
-package com.sandbox.game;
+package Entities;
 
 /**
  * Created by zliu on 2018-02-16.
  */
 
 import com.sandbox.game.Enums.tileType;
-import com.sandbox.game.Entity;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;

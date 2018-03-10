@@ -1,4 +1,4 @@
-package com.sandbox.game;
+package Map;
 
 /**
  * Created by zliu on 2018-02-16.
@@ -9,36 +9,41 @@ import java.util.*;
 import Box2D.Box2DHelper;
 import Box2D.Box2DWorld;
 
+import Entities.StaticObject;
+import Entities.Tile;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.sandbox.game.Asset;
+import Entities.Entity;
 import com.sandbox.game.Enums.tileType;
 import com.badlogic.gdx.math.MathUtils;
+import Entities.Tree;
 
 public class Island {
 
-    //TODO: Continue generation until it reaches a set size
     private int chunkSize;
+    private IslandGen mapGen;
 
-    Tile centreTile;
-    Chunk chunk;
-    private MapGeneration mapGen;
+    public Tile centreTile;
+    public Chunk chunk;
 
-    ArrayList<Entity> entities = new ArrayList<Entity>();
+    //Entities
+    public ArrayList<Entity> entities = new ArrayList<Entity>();
 
-    //Constructor
     public Island(Box2DWorld box2D, int chunkSize, int iterations)
     {
         this.chunkSize = chunkSize;
 
         //create new empty chunk
         chunk = new Chunk(chunkSize, 8);
-        mapGen = new MapGeneration(chunk, chunkSize, chunk.tileSize, iterations);
+
+        //Initializes generator, island gen in Reset method.
+        mapGen = new IslandGen(chunkSize, chunk.tileSize, iterations);
 
         //initialize island
         Reset(box2D);
     }
 
-    //Regen
     public void Reset(Box2DWorld box2D)
     {
         //clear entities and collision data
@@ -46,11 +51,11 @@ public class Island {
         box2D.Clear();
 
         //Generate chunk
-        chunk = mapGen.SetupTiles();
+        chunk = mapGen.GenerateIsland();
         centreTile = mapGen.GetCentreTile();
 
         //Post generation procedures
-        AddSecondaryTextures();
+        //AddSecondaryTextures();
         AssignTileCodes();
         GenerateColliders(box2D);
         AddEntities(box2D);
@@ -110,7 +115,7 @@ public class Island {
                     {
                         if(!tile.occupied)
                         {
-                            entities.add(new House(tile.pos, box2D));
+                            entities.add(new StaticObject(8, Asset.house, tile.pos, box2D));
                             tile.occupied = true;
                         }
                     }

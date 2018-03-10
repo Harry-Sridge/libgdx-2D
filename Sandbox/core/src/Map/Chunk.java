@@ -1,4 +1,6 @@
-package com.sandbox.game;
+package Map;
+
+import Entities.Tile;
 
 /**
  * Created by zliu on 2018-02-16.
@@ -7,8 +9,13 @@ package com.sandbox.game;
 //Stores an array of tiles
 public class Chunk {
 
-    int size;
+    //Size of chunk
+    private int size;
+
+    //Size of tiles.
+    //Defaults to 8x8, the size of the sprites.
     int tileSize;
+
     public Tile[][] tiles;
 
     public Chunk(int size, int tileSize)

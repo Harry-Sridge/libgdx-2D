@@ -1,5 +1,7 @@
 package com.sandbox.game;
 
+import Entities.Entity;
+
 import java.util.HashMap;
 
 /**

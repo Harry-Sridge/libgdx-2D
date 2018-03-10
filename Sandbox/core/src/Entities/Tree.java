@@ -1,20 +1,24 @@
-package com.sandbox.game;
+package Entities;
 
 import Box2D.Box2DHelper;
 import Box2D.Box2DWorld;
+import Entities.Entity;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.sandbox.game.Asset;
+import com.sandbox.game.Enums;
 
 /**
  * Created by zliu on 2018-02-17.
  */
 
-public class Tree extends Entity{
+public class Tree extends Entity {
 
     public Tree(Vector3 pos, Box2DWorld box2D)
     {
         super();
-        type = Enums.entityType.Tree;
+        type = Enums.entityType.InteractiveStatic;
         width = 8;
         height = 8;
         this.pos = pos;

@@ -1,4 +1,4 @@
-package com.sandbox.game;
+package Entities;
 
 /**
  * Created by Southridge on 2018-02-16.
@@ -10,9 +10,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.sandbox.game.Enums.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sandbox.game.Inventory;
 
 public class Entity implements Comparable<Entity> {
 
+    //Collision
     public Body body;
 
     public int hashcode;
@@ -44,6 +46,7 @@ public class Entity implements Comparable<Entity> {
     }
 
     //Z sorting
+    //The player cannot go on top of trees
     public int compareTo(Entity entity)
     {
         float tempY = entity.pos.y;

@@ -13,6 +13,12 @@ public class Enums {
 
     public enum entityType
     {
-        Player, Tree, House, Slime
+        Player, Static, InteractiveStatic
+
+    }
+
+    public enum itemType
+    {
+        Weapon, Food, Potion, Misc
     }
 }

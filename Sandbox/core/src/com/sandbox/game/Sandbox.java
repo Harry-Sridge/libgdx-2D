@@ -1,6 +1,11 @@
 package com.sandbox.game;
 
 import Box2D.Box2DWorld;
+import Entities.Entity;
+import Entities.Player;
+import Entities.Tile;
+import Map.Dungeon;
+import Map.Island;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,14 +24,16 @@ public class Sandbox extends ApplicationAdapter {
 	private Control control;
 	private Box2DWorld box2D;
 
-	//Text?
-    private BitmapFont font;
-
 	private int displayW;
 	private int displayH;
 
-	Island island;
-	Player player;
+	//World
+	private Island island;
+	private Dungeon dungeon;
+
+	private Player player;
+
+	//TODO: Use a better way to spawn different worlds.
 
 	@Override
 	public void create () {
@@ -34,18 +41,15 @@ public class Sandbox extends ApplicationAdapter {
 		batch = new SpriteBatch();
         box2D = new Box2DWorld();
 
-        font = new BitmapFont();
-        font.setColor(Color.FIREBRICK);
-
         //Set window
 		displayW = Gdx.graphics.getWidth();
 		displayH = Gdx.graphics.getHeight();
 
-		int h = (int)(displayH/Math.floor(displayH/160));
-		int w = (int)(displayW/(displayH/(displayH/Math.floor(displayH/160))));
+		int h = (int)(displayH / Math.floor(displayH / 160));
+		int w = (int)(displayW / (displayH / (displayH / Math.floor(displayH / 160))));
 
 		camera = new OrthographicCamera(w,h);
-		camera.zoom = 1f;
+		camera.zoom = 0.6f;
 
 		//Set controller
 		control = new Control(displayW, displayH, camera);
@@ -53,15 +57,9 @@ public class Sandbox extends ApplicationAdapter {
 
         Asset.Load();
 
-        //Initialize basic world objects
         island = new Island(box2D, 20, 5);
-        player = new Player(island.centreTile.pos, box2D);
-        island.entities.add(player);
-
-        //Add entities to hash map for collisions
-        box2D.PopulateEntityMap(island.entities);
-
-        System.out.println("Total tiles: " + island.chunk.tiles.length*island.chunk.tiles.length);
+        player = new Player(island.GetPlayerSpawnPos(), box2D);
+        resetWorld();
 	}
 
 	@Override
@@ -72,10 +70,7 @@ public class Sandbox extends ApplicationAdapter {
 		//Pre render
         if(control.reset)
         {
-            island = new Island(box2D, 20, 5);
-            player.Reset(box2D, island.GetPlayerSpawnPos());
-            island.entities.add(player);
-            box2D.PopulateEntityMap(island.entities);
+			resetWorld();
             control.reset = false;
         }
 
@@ -88,7 +83,9 @@ public class Sandbox extends ApplicationAdapter {
 		player.update(control);
         camera.position.lerp(player.pos, 0.1f);
 		camera.update();
+
         Collections.sort(island.entities);
+        //Collections.sort(dungeon.entities);
 
         batch.setProjectionMatrix(camera.combined);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -97,6 +94,7 @@ public class Sandbox extends ApplicationAdapter {
 		//TODO: maybe draw tiles differently from entities?
 		//TODO: Add a better draw function
 		batch.begin();
+
         // Draw all tiles in the chunk
         for(Tile[] tiles : island.chunk.tiles)
         {
@@ -110,16 +108,16 @@ public class Sandbox extends ApplicationAdapter {
 				}
             }
         }
+
         //Draw entities on island
         for(Entity e : island.entities)
             e.Draw(batch);
-
-        //font.draw(batch, "TEST", player.pos.x, player.pos.y+5);
 
 		batch.end();
 
 		//Post render
 		box2D.tick(camera, control);
+
 		island.ClearRemovedEntities(box2D);
 	}
 	
@@ -127,4 +125,17 @@ public class Sandbox extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 	}
+
+	private void resetWorld()
+    {
+        island = new Island(box2D, 50, 15);
+        player.Reset(box2D, island.GetPlayerSpawnPos());
+        island.entities.add(player);
+        box2D.PopulateEntityMap(island.entities);
+
+//            player.Reset(box2D, dungeon.GetPlayerSpawnPos());
+//            dungeon = new dungeon(box2D, 40);
+//            dungeon.entities.add(player);
+//            box2D.PopulateEntityMap(dungeon.entities);
+    }
 }

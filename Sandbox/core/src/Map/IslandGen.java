@@ -1,12 +1,16 @@
-package com.sandbox.game;
+package Map;
 
+import Entities.Tile;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
+import com.sandbox.game.Asset;
+import com.sandbox.game.Enums;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapGeneration {
+public class IslandGen {
+
 
     private Chunk map;
     private int chunkSize;
@@ -15,15 +19,15 @@ public class MapGeneration {
     private int centerRow;
     private int centerCol;
 
-    public MapGeneration(Chunk canvas, int chunkSize, int tileSize, int iterations)
+    public IslandGen(int chunkSize, int tileSize, int iterations)
     {
-        map = canvas;
+        map = new Chunk(chunkSize, tileSize);
         this.chunkSize = chunkSize;
         this.tileSize = tileSize;
         this.iterations = iterations;
     }
 
-    public Chunk SetupTiles()
+    public Chunk GenerateIsland()
     {
         //get reference positions
         centerRow = (int)(chunkSize / 2);
@@ -37,7 +41,7 @@ public class MapGeneration {
                 //Water - 0
                 //Grass - 1
                 //default tile is water
-                Tile tile = new Tile(col, row, tileSize, Enums.tileType.Water, GetRandomWaterTexture());
+                Tile tile = new Tile(col, row, tileSize, Enums.tileType.Water, Asset.GetRandomWaterTexture());
                 map.tiles[row][col] = tile;
             }
         }
@@ -46,18 +50,18 @@ public class MapGeneration {
         List<Tile> seeds = new ArrayList<Tile>();
 
         //Manually add seeds here
-        //We can think of a better way to add seeds
+        //TODO: We can think of a better way to add seeds
         seeds.add(map.tiles[centerRow][centerCol]);
 //        seeds.add(map.tiles[centerRow-5][centerCol+30]);
 //        seeds.add(map.tiles[centerRow][centerCol-15]);
 //        seeds.add(map.tiles[centerRow+40][centerCol]);
 //        seeds.add(map.tiles[centerRow-35][centerCol]);
 
-        //Generate map using these seeds
-        return(SmoothMap(map, seeds, iterations));
+        //Generate map using seeds
+        return(SmoothMap(seeds, iterations));
     }
 
-    private Chunk SmoothMap (Chunk map, List<Tile> seeds, int iterations)
+    private Chunk SmoothMap (List<Tile> seeds, int iterations)
     {
         //Store the newest seeds (the ones that had just been generated)
         //to avoid repeatedly checking older tiles
@@ -77,9 +81,6 @@ public class MapGeneration {
                 //get max possible spread from current seed
                 List<Tile> freeTiles = GetFreeTiles(seed.row, seed.col);
 
-                //Debug
-                //System.out.println("Seed " + j + " pos: [" + seed.row + ", " + seed.col + "] Free tiles: " + freeTiles.size());
-
                 int spread = 0;
                 for(Tile t : freeTiles)
                 {
@@ -88,7 +89,7 @@ public class MapGeneration {
                     if(Math.random() > 0.5f)
                     {
                         t.type = Enums.tileType.Grass;
-                        t.texture = GetRandomGrassTexture();
+                        t.texture = Asset.GetRandomGrassTexture();
                         map.tiles[t.row][t.col] = t;
                         //the new grass tile is then will become next batch of seeds.
                         tempSeeds.add(t);
@@ -152,47 +153,6 @@ public class MapGeneration {
         return freeTiles;
     }
 
-    private Texture GetRandomGrassTexture()
-    {
-        Texture grass;
-
-        int tile = MathUtils.random(20);
-        switch (tile) {
-            case 1:  grass = Asset.grass_01;
-                break;
-            case 2:  grass = Asset.grass_02;
-                break;
-            case 3:  grass = Asset.grass_03;
-                break;
-            case 4:  grass = Asset.grass_04;
-                break;
-            default: grass = Asset.grass_01;
-                break;
-        }
-
-        return grass;
-    }
-
-    private Texture GetRandomWaterTexture()
-    {
-        Texture water;
-
-        int tile = MathUtils.random(20);
-        switch (tile) {
-            case 1:  water = Asset.water_01;
-                break;
-            case 2:  water = Asset.water_02;
-                break;
-            case 3:  water = Asset.water_03;
-                break;
-            case 4:  water = Asset.water_04;
-                break;
-            default: water = Asset.water_01;
-                break;
-        }
-
-        return water;
-    }
 
     public Tile GetCentreTile()
     {
