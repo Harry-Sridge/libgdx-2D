@@ -42,29 +42,24 @@ public class Tile extends Entity{
         this.row = (int)col;
     }
 
-    public String DebugTile()
-    {
-        return "x: " + pos.x + " y: " + pos.y + " row: " + row + " col: " + col + " code: " + code + " type: " + type.toString();
+    public boolean isPath() {
+        return type == tileType.Path;
     }
 
-    public boolean isGrass() {
-        return type == tileType.Grass;
-    }
-
-    public boolean isWater() {
-        return type == tileType.Water;
+    public boolean isWall() {
+        return type == tileType.Wall;
     }
 
     public boolean isCliff() {
         return type == tileType.Cliff;
     }
 
-    public boolean isAllWater()
+    public boolean isAllWall()
     {
         return (code.equals("000000000"));
     }
 
     public boolean isCollider() {
-        return (!isWater() && !isCliff());
+        return (!isWall() && !isCliff());
     }
 }

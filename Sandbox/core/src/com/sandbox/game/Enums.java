@@ -8,7 +8,7 @@ public class Enums {
 
     public enum tileType
     {
-        Grass, Water, Cliff
+        Path, Wall, Cliff
     }
 
     public enum entityType

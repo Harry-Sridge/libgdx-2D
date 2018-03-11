@@ -30,7 +30,7 @@ public class Chunk {
         if(r >= 0 && c >= 0)
         {
             if(r < size && c < size)
-                return tiles[r][c].isGrass()? "1" : "0";
+                return tiles[r][c].isPath()? "1" : "0";
             else
                 return "0";
         }

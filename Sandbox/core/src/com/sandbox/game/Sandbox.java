@@ -11,9 +11,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.Collections;
 
@@ -33,11 +33,14 @@ public class Sandbox extends ApplicationAdapter {
 
 	private Player player;
 
-	//TODO: Use a better way to spawn different worlds.
+	//TODO: find a way to shift between worlds, and a way to keep data from each world
+    //TODO: UI!!!!
+
+    Matrix4 screenMatrix;
 
 	@Override
-	public void create () {
-
+	public void create ()
+    {
 		batch = new SpriteBatch();
         box2D = new Box2DWorld();
 
@@ -49,7 +52,7 @@ public class Sandbox extends ApplicationAdapter {
 		int w = (int)(displayW / (displayH / (displayH / Math.floor(displayH / 160))));
 
 		camera = new OrthographicCamera(w,h);
-		camera.zoom = 0.6f;
+		camera.zoom = 1f;
 
 		//Set controller
 		control = new Control(displayW, displayH, camera);
@@ -60,10 +63,13 @@ public class Sandbox extends ApplicationAdapter {
         island = new Island(box2D, 20, 5);
         player = new Player(island.GetPlayerSpawnPos(), box2D);
         resetWorld();
+
+        screenMatrix = new Matrix4(batch.getProjectionMatrix());
 	}
 
 	@Override
-	public void render () {
+	public void render ()
+    {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -81,43 +87,61 @@ public class Sandbox extends ApplicationAdapter {
         }
 
 		player.update(control);
-        camera.position.lerp(player.pos, 0.1f);
+        camera.position.lerp(new Vector3(player.pos.x + player.width / 2, player.pos.y + player.height / 2, 0), 0.1f);
 		camera.update();
 
-        Collections.sort(island.entities);
-        //Collections.sort(dungeon.entities);
+        //Collections.sort(island.entities);
+        Collections.sort(dungeon.entities);
 
         batch.setProjectionMatrix(camera.combined);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		//Render
-		//TODO: maybe draw tiles differently from entities?
-		//TODO: Add a better draw function
+		//TODO: current draw is not efficient, maybe use occlusion culling?
+
 		batch.begin();
 
         // Draw all tiles in the chunk
-        for(Tile[] tiles : island.chunk.tiles)
+//        for(Tile[] tiles : island.chunk.tiles)
+//        {
+//            for(Tile tile : tiles)
+//            {
+//                batch.draw(tile.texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
+//                if (tile.secondaryTextures != null)
+//				{
+//				    for(Texture texture : tile.secondaryTextures)
+//						batch.draw(texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
+//				}
+//            }
+//        }
+//
+//        //Draw entities on island
+//        for(Entity e : island.entities)
+//            e.Draw(batch);
+
+        for(Tile[] tiles : dungeon.chunk.tiles)
         {
             for(Tile tile : tiles)
             {
                 batch.draw(tile.texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
                 if (tile.secondaryTextures != null)
-				{
-				    for(Texture texture : tile.secondaryTextures)
-						batch.draw(texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
-				}
+                {
+                    for(Texture texture : tile.secondaryTextures)
+                        batch.draw(texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
+                }
             }
         }
-
         //Draw entities on island
-        for(Entity e : island.entities)
+        for(Entity e : dungeon.entities)
             e.Draw(batch);
+
+        //UI
+        batch.setProjectionMatrix(screenMatrix);
 
 		batch.end();
 
 		//Post render
 		box2D.tick(camera, control);
-
 		island.ClearRemovedEntities(box2D);
 	}
 	
@@ -128,14 +152,14 @@ public class Sandbox extends ApplicationAdapter {
 
 	private void resetWorld()
     {
-        island = new Island(box2D, 50, 15);
-        player.Reset(box2D, island.GetPlayerSpawnPos());
-        island.entities.add(player);
-        box2D.PopulateEntityMap(island.entities);
+//        island = new Island(box2D, 50, 15);
+//        player.Reset(box2D, island.GetPlayerSpawnPos());
+//        island.entities.add(player);
+//        box2D.PopulateEntityMap(island.entities);
 
-//            player.Reset(box2D, dungeon.GetPlayerSpawnPos());
-//            dungeon = new dungeon(box2D, 40);
-//            dungeon.entities.add(player);
-//            box2D.PopulateEntityMap(dungeon.entities);
+        dungeon = new Dungeon(box2D, 20, 5, 20);
+        player.Reset(box2D, dungeon.GetPlayerSpawnPos());
+        dungeon.entities.add(player);
+        box2D.PopulateEntityMap(dungeon.entities);
     }
 }

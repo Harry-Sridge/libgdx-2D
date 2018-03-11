@@ -37,6 +37,14 @@ class Room
 
 public class DungeonGen
 {
+    //TODO: each room should at least have one door, but not too many doors
+    //TODO: find appropriate path gen starting pos
+    //TODO: use new textures
+    //TODO: add lighting maybe? I mean, it's a dungeon, it should be dark.
+    //TODO: add entrance/exit
+    //TODO: create more entities for dungeon, like trees for land, like bone piles and stuff
+    //TODO: each rooms should have chests and enemies
+
     private Cell[][] map;
     private Chunk chunk;
 
@@ -48,14 +56,19 @@ public class DungeonGen
     private char space = 'X';
     private char roomPath = 'O';
 
-    private static ArrayList<Room> rooms = new ArrayList<Room>();
+    private ArrayList<Room> rooms = new ArrayList<Room>();
 
-    public DungeonGen(Chunk chunk, int size)
+    private int roomsToAdd;
+    private int smoothIterations;
+
+    public DungeonGen(Chunk chunk, int size, int rooms, int smoothIterations)
     {
         this.chunk = chunk;
         width = size;
         height = size;
         border = 1;
+        roomsToAdd = rooms;
+        this.smoothIterations = smoothIterations;
     }
 
     public Chunk GenerateDungeon() {
@@ -82,9 +95,9 @@ public class DungeonGen
             }
         }
 
-        addRooms(20);
+        addRooms(roomsToAdd);
         addDoors();
-        removeEnds(50);
+        removeEnds(smoothIterations);
         return(mapToChunk());
     }
 
@@ -248,10 +261,7 @@ public class DungeonGen
                         {
                             if(map[row - 1][col].value == roomPath)
                             {
-                                if(getRandom(1, 40) == 1)
-                                {
-                                    map[row][col].value = path;
-                                }
+                                map[row][col].value = path;
                             }
                         }
 
@@ -259,9 +269,10 @@ public class DungeonGen
                         {
                             if(map[row - 1][col].value == path)
                             {
-                                if(getRandom(1, 40) == 10)
+                                if(getRandom(1, 60) == 10)
                                 {
                                     map[row][col].value = path;
+                                    return;
                                 }
                             }
                         }
@@ -270,9 +281,10 @@ public class DungeonGen
                         {
                             if(map[row][col - 1].value == path)
                             {
-                                if(getRandom(1, 40) == 10)
+                                if(getRandom(1, 60) == 10)
                                 {
                                     map[row][col].value = path;
+                                    return;
                                 }
                             }
                         }
@@ -281,9 +293,10 @@ public class DungeonGen
                         {
                             if(map[row][col - 1].value == roomPath)
                             {
-                                if(getRandom(1, 40) == 10)
+                                if(getRandom(1, 60) == 10)
                                 {
                                     map[row][col].value = path;
+                                    return;
                                 }
                             }
                         }
@@ -292,9 +305,10 @@ public class DungeonGen
                         {
                             if(map[row][col - 1].value == roomPath)
                             {
-                                if(getRandom(1, 40) == 10)
+                                if(getRandom(1, 60) == 10)
                                 {
                                     map[row][col].value = path;
+                                    return;
                                 }
                             }
                         }
@@ -303,9 +317,10 @@ public class DungeonGen
                         {
                             if(map[row + 1][col].value == roomPath)
                             {
-                                if(getRandom(1, 40) == 10)
+                                if(getRandom(1, 60) == 10)
                                 {
                                     map[row][col].value = path;
+                                    return;
                                 }
                             }
                         }
@@ -377,12 +392,12 @@ public class DungeonGen
 
                 if(map[r][c].value == space)
                 {
-                    t = new Tile(r, c, 8, Enums.tileType.Water, Asset.water_01);
+                    t = new Tile(r, c, 8, Enums.tileType.Wall, Asset.water_01);
                     chunk.tiles[r][c] = t;
                 }
                 else if(map[r][c].value == path || map[r][c].value == roomPath)
                 {
-                    t = new Tile(r, c, 8, Enums.tileType.Grass, Asset.grass_01);
+                    t = new Tile(r, c, 8, Enums.tileType.Path, Asset.grass_01);
                     chunk.tiles[r][c] = t;
                 }
             }

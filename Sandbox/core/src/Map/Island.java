@@ -9,7 +9,6 @@ import java.util.*;
 import Box2D.Box2DHelper;
 import Box2D.Box2DWorld;
 
-import Entities.StaticObject;
 import Entities.Tile;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -90,32 +89,13 @@ public class Island {
         {
             for(Tile tile : tiles)
             {
-                if(tile.isGrass())
+                if(tile.isPath())
                 {
                     if(MathUtils.random(100) > 90)
                     {
                         if(!tile.occupied)
                         {
                             entities.add(new Tree(tile.pos, box2D));
-                            tile.occupied = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // ADD HOUSES
-        for(Tile[] tiles : chunk.tiles)
-        {
-            for(Tile tile : tiles)
-            {
-                if(tile.isGrass())
-                {
-                    if(MathUtils.random(100) > 95)
-                    {
-                        if(!tile.occupied)
-                        {
-                            entities.add(new StaticObject(8, Asset.house, tile.pos, box2D));
                             tile.occupied = true;
                         }
                     }
@@ -131,31 +111,31 @@ public class Island {
         {
             for(int c = 1; c < chunkSize-1; c++)
             {
-                if(chunk.tiles[r][c].type == tileType.Water)
+                if(chunk.tiles[r][c].type == tileType.Wall)
                 {
                     //bottom
-                    if(chunk.tiles[r+1][c].type == tileType.Grass)
+                    if(chunk.tiles[r+1][c].type == tileType.Path)
                     {
-                        if(chunk.tiles[r-1][c].type == tileType.Grass)
+                        if(chunk.tiles[r-1][c].type == tileType.Path)
                             chunk.tiles[r][c].secondaryTextures.add(Asset.cliff);
                         else
                             chunk.tiles[r][c].secondaryTextures.add(Asset.cliff_bottom);
                         chunk.tiles[r][c].type = tileType.Cliff;
                     }
                     //if top tile is grass
-                    if(chunk.tiles[r+1][c].type == tileType.Grass)
+                    if(chunk.tiles[r+1][c].type == tileType.Path)
                     {
                         //and if right tile is grass
-                        if(chunk.tiles[r][c+1].type == tileType.Grass)
+                        if(chunk.tiles[r][c+1].type == tileType.Path)
                         {
                             //and if left tile is grass
-                            if(chunk.tiles[r][c-1].type == tileType.Grass)
+                            if(chunk.tiles[r][c-1].type == tileType.Path)
                             {
                                 //and if bottom tile is grass
-                                if(chunk.tiles[r-1][c].type == tileType.Grass)
+                                if(chunk.tiles[r-1][c].type == tileType.Path)
                                     chunk.tiles[r][c].secondaryTextures.add(Asset.grass_hole); //it's a hole
                                 //and if bottom tile is water
-                                else if(chunk.tiles[r-1][c].type == tileType.Water)
+                                else if(chunk.tiles[r-1][c].type == tileType.Wall)
                                     chunk.tiles[r][c].secondaryTextures.add(Asset.grass_inlet); //it's an inlet
                             }
                             //but left tile is not grass
@@ -163,23 +143,23 @@ public class Island {
                                 chunk.tiles[r][c].secondaryTextures.add(Asset.grass_inside_right); //it's a inside right corner
                         }
                         //but right tile is not grass, and if left tile is grass
-                        else if(chunk.tiles[r][c-1].type == tileType.Grass)
+                        else if(chunk.tiles[r][c-1].type == tileType.Path)
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_inside_left); //it's a inside left turn.
                     }
                     //top left edge
-                    if(chunk.tiles[r-1][c+1].type == tileType.Grass)
+                    if(chunk.tiles[r-1][c+1].type == tileType.Path)
                     {
-                        if(chunk.tiles[r][c+1].type == tileType.Water)
+                        if(chunk.tiles[r][c+1].type == tileType.Wall)
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_top_left);
                     }
                     //top right edge
-                    if(chunk.tiles[r-1][c-1].type == tileType.Grass)
+                    if(chunk.tiles[r-1][c-1].type == tileType.Path)
                     {
-                        if(chunk.tiles[r][c-1].type == tileType.Water)
+                        if(chunk.tiles[r][c-1].type == tileType.Wall)
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_top_right);
                     }
                     //left edge
-                    if(chunk.tiles[r][c+1].type == tileType.Grass)
+                    if(chunk.tiles[r][c+1].type == tileType.Path)
                     {
                         if(chunk.tiles[r][c].type == tileType.Cliff)
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_left);
@@ -187,7 +167,7 @@ public class Island {
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_most_left);
                     }
                     //right edge
-                    if(chunk.tiles[r][c-1].type == tileType.Grass)
+                    if(chunk.tiles[r][c-1].type == tileType.Path)
                     {
                         if(chunk.tiles[r][c].type == tileType.Cliff)
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_right);
@@ -195,27 +175,27 @@ public class Island {
                             chunk.tiles[r][c].secondaryTextures.add(Asset.grass_most_right);
                     }
                     //top edge
-                    if(chunk.tiles[r-1][c].type == tileType.Grass)
+                    if(chunk.tiles[r-1][c].type == tileType.Path)
                     {
                         chunk.tiles[r][c].secondaryTextures.add(Asset.grass_top);
                     }
 
                     //bottom left edge
-                    if(chunk.tiles[r+1][c-1].type == tileType.Grass)
+                    if(chunk.tiles[r+1][c-1].type == tileType.Path)
                     {
                         if(chunk.tiles[r][c-1].type == tileType.Cliff)
                         {
-                            if(chunk.tiles[r+1][c].type != tileType.Grass)
+                            if(chunk.tiles[r+1][c].type != tileType.Path)
                                 chunk.tiles[r][c].secondaryTextures.add(Asset.grass_left_upper_edge);
                         }
                     }
 
                     //bottom right edge
-                    if(chunk.tiles[r+1][c+1].type == tileType.Grass)
+                    if(chunk.tiles[r+1][c+1].type == tileType.Path)
                     {
-                        if(chunk.tiles[r][c+1].type == tileType.Water)
+                        if(chunk.tiles[r][c+1].type == tileType.Wall)
                         {
-                            if(chunk.tiles[r+1][c].type != tileType.Grass)
+                            if(chunk.tiles[r+1][c].type != tileType.Path)
                                 chunk.tiles[r][c].secondaryTextures.add(Asset.grass_right_upper_edge);
                         }
                     }
@@ -233,7 +213,7 @@ public class Island {
                 //there's no need to generate hit boxes for grass tiles.
                 if(!tile.isCollider())
                 {
-                    if(!tile.isAllWater())
+                    if(!tile.isAllWall())
                         Box2DHelper.CreateBody(box2D.world, chunk.tileSize, chunk.tileSize, 0, 0, tile.pos, BodyDef.BodyType.StaticBody);
                 }
             }
@@ -257,7 +237,6 @@ public class Island {
                 for(int r: rows){
                     for(int c: cols){
                         tile.code += chunk.GetTileCode(tile.row + r, tile.col + c);
-                        //UpdateImage(tile);
                     }
                 }
             }

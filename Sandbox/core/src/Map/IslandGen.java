@@ -1,8 +1,6 @@
 package Map;
 
 import Entities.Tile;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
 import com.sandbox.game.Asset;
 import com.sandbox.game.Enums;
 
@@ -38,10 +36,10 @@ public class IslandGen {
         {
             for(int col = 0; col < chunkSize; col ++)
             {
-                //Water - 0
-                //Grass - 1
+                //Wall - 0
+                //Path - 1
                 //default tile is water
-                Tile tile = new Tile(col, row, tileSize, Enums.tileType.Water, Asset.GetRandomWaterTexture());
+                Tile tile = new Tile(col, row, tileSize, Enums.tileType.Wall, Asset.GetRandomWaterTexture());
                 map.tiles[row][col] = tile;
             }
         }
@@ -88,7 +86,7 @@ public class IslandGen {
                     //will have a 50% of becoming a grass tile.
                     if(Math.random() > 0.5f)
                     {
-                        t.type = Enums.tileType.Grass;
+                        t.type = Enums.tileType.Path;
                         t.texture = Asset.GetRandomGrassTexture();
                         map.tiles[t.row][t.col] = t;
                         //the new grass tile is then will become next batch of seeds.
@@ -130,7 +128,7 @@ public class IslandGen {
             {
                 if(r+row < chunkSize)
                 {
-                    if(map.tiles[r+row][c].type == Enums.tileType.Water)
+                    if(map.tiles[r+row][c].type == Enums.tileType.Wall)
                         freeTiles.add(map.tiles[r+row][c]);
                 }
             }
@@ -144,7 +142,7 @@ public class IslandGen {
             {
                 if(c+col < chunkSize)
                 {
-                    if(map.tiles[r][c+col].type == Enums.tileType.Water)
+                    if(map.tiles[r][c+col].type == Enums.tileType.Wall)
                         freeTiles.add(map.tiles[r][c+col]);
                 }
             }
