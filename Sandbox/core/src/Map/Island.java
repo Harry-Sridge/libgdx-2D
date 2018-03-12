@@ -9,6 +9,7 @@ import java.util.*;
 import Box2D.Box2DWorld;
 import Entities.*;
 import com.badlogic.gdx.math.MathUtils;
+import com.sandbox.game.Asset;
 
 public class Island extends World{
 
@@ -38,6 +39,7 @@ public class Island extends World{
         GenerateColliders(box2D);
         addEntities(box2D);
     }
+
 
     @Override
     public void ClearRemovedEntities(Box2DWorld box2D)
@@ -71,6 +73,27 @@ public class Island extends World{
                         if(!tile.occupied)
                         {
                             entities.add(new Tree(tile.pos, box2D));
+                            tile.occupied = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // ADD TREES
+        for(Tile[] tiles: chunk.tiles)
+        {
+            for(Tile tile : tiles)
+            {
+                if(tile.isPath())
+                {
+                    if(MathUtils.random(100) > 90)
+                    {
+                        if(!tile.occupied)
+                        {
+                            Enemy skull = new Enemy(tile.pos, box2D, Asset.skull_front, Asset.skull_back, Asset.skull_left, Asset.skull_right);
+                            entities.add(skull);
+                            enemies.add(skull);
                             tile.occupied = true;
                         }
                     }

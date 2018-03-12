@@ -15,7 +15,6 @@ import Entities.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class Box2DWorld {
 
     public World world;

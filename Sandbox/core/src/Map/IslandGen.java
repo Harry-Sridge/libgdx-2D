@@ -50,6 +50,8 @@ public class IslandGen {
         //Manually add seeds here
         //TODO: We can think of a better way to add seeds
         seeds.add(map.tiles[centerRow][centerCol]);
+        seeds.add(map.tiles[centerRow+5][centerCol]);
+        seeds.add(map.tiles[centerRow-9][centerCol]);
 
         //Generate map using seeds
         return(SmoothMap(seeds, iterations));
@@ -94,10 +96,6 @@ public class IslandGen {
                 //If the current seed does not spread, keep that seed.
                 if(spread == 0)
                     tempSeeds.add(nextSeeds.get(j));
-
-//                System.out.println("Spread from current seed: " + spread);
-//                System.out.println("Total seeds: " + tempSeeds.size());
-//                System.out.println();
             }
             //Update seed queue
             nextSeeds.clear();

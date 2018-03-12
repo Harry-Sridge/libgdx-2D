@@ -27,8 +27,8 @@ public class Enemy extends Entity{
     public Enemy(Vector3 pos, Box2DWorld box2D, Texture f, Texture b, Texture l, Texture r)
     {
         type = Enums.entityType.Enemy;
-        width = 5;
-        height = 5;
+        width = 4;
+        height = 4;
         this.pos = pos;
 
         front = f;
@@ -46,6 +46,11 @@ public class Enemy extends Entity{
 
     public void start()
     {
+        xDir = 1;
+        yDir = 1;
 
+        body.setLinearVelocity(xDir*speed, yDir*speed);
+        pos.x = body.getPosition().x - width/2;
+        pos.y = body.getPosition().y - height/4;
     }
 }

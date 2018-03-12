@@ -1,18 +1,13 @@
 package com.sandbox.game;
 
 import Box2D.Box2DWorld;
-import Entities.Enemy;
-import Entities.Entity;
 import Entities.Player;
-import Entities.Tile;
 import Map.Dungeon;
 import Map.Island;
-import com.sandbox.game.WorldManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -32,6 +27,7 @@ public class Sandbox extends ApplicationAdapter {
 
 	private WorldManager islandManager;
     private Island island;
+    private Dungeon dungeon;
 
     private Matrix4 screenMatrix;
 
@@ -56,7 +52,8 @@ public class Sandbox extends ApplicationAdapter {
 
         Asset.Load();
 
-        island = new Island(box2D, 40, 10);
+        island = new Island(box2D, 50, 5);
+        dungeon = new Dungeon(box2D, 20, 3, 20);
         islandManager = new WorldManager(box2D, island);
         player = new Player(islandManager.world.GetPlayerSpawnPos(), box2D);
         reset();
@@ -120,6 +117,7 @@ public class Sandbox extends ApplicationAdapter {
         islandManager.resetWorld();
         player.Reset(box2D, islandManager.world.GetPlayerSpawnPos());
         islandManager.world.entities.add(player);
+        box2D.PopulateEntityMap(island.entities);
         control.reset = false;
     }
 }

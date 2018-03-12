@@ -83,6 +83,7 @@ public class Player extends Entity {
         	yDir = (float) - Math.sqrt(0.5);
         }
 
+        //movement
         body.setLinearVelocity(xDir*speed, yDir*speed);
         pos.x = body.getPosition().x - width/2;
         pos.y = body.getPosition().y - height/4;
@@ -98,22 +99,11 @@ public class Player extends Entity {
             texture = Asset.player_front;
 
         //if interact key is pressed
-        if(control.interact && interactEntities.size()>0)
+        if(control.interact && interactEntities.size() > 0)
         {
             interactEntities.get(0).Interact(this);
             control.interact = false;
         }
-
-//        if(control.LMB)
-//        {
-//            float velocity = 1.0f;
-//            double angle = -Math.toDegrees(atan2((double)(control.mouseClickPos.x - pos.x), (double)(control.mouseClickPos.y - pos.y)));
-//
-//            StaticObject tree = new StaticObject(8, Asset.player_front, new Vector3(pos.x, pos.y + 10, 0), box2D);
-//            double xVel = velocity * Math.cos(angle);
-//            double yVel = velocity * Math.sin(angle);
-//            tree.body.setLinearVelocity((float)(xVel * velocity), (float)(yVel * velocity));
-//        }
 
         control.interact = false;
     }
@@ -125,10 +115,5 @@ public class Player extends Entity {
             interactEntities.add(e);
         else
             interactEntities.remove(e);
-    }
-
-    private void shoot(Control control)
-    {
-
     }
 }
