@@ -1,11 +1,13 @@
 package com.sandbox.game;
 
 import Box2D.Box2DWorld;
+import Entities.Enemy;
 import Entities.Entity;
 import Entities.Player;
 import Entities.Tile;
 import Map.Dungeon;
 import Map.Island;
+import com.sandbox.game.WorldManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.Collections;
 
 public class Sandbox extends ApplicationAdapter {
 
@@ -27,16 +28,12 @@ public class Sandbox extends ApplicationAdapter {
 	private int displayW;
 	private int displayH;
 
-	//World
-	private Island island;
-	private Dungeon dungeon;
+	public Player player;
 
-	private Player player;
+	private WorldManager islandManager;
+    private Island island;
 
-	//TODO: find a way to shift between worlds, and a way to keep data from each world
-    //TODO: UI!!!!
-
-    Matrix4 screenMatrix;
+    private Matrix4 screenMatrix;
 
 	@Override
 	public void create ()
@@ -44,7 +41,6 @@ public class Sandbox extends ApplicationAdapter {
 		batch = new SpriteBatch();
         box2D = new Box2DWorld();
 
-        //Set window
 		displayW = Gdx.graphics.getWidth();
 		displayH = Gdx.graphics.getHeight();
 
@@ -60,9 +56,10 @@ public class Sandbox extends ApplicationAdapter {
 
         Asset.Load();
 
-        island = new Island(box2D, 20, 5);
-        player = new Player(island.GetPlayerSpawnPos(), box2D);
-        resetWorld();
+        island = new Island(box2D, 40, 10);
+        islandManager = new WorldManager(box2D, island);
+        player = new Player(islandManager.world.GetPlayerSpawnPos(), box2D);
+        reset();
 
         screenMatrix = new Matrix4(batch.getProjectionMatrix());
 	}
@@ -74,11 +71,10 @@ public class Sandbox extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//Pre render
+
+        //CONTROLS
         if(control.reset)
-        {
-			resetWorld();
-            control.reset = false;
-        }
+			reset();
 
         if(control.inventory)
         {
@@ -90,8 +86,7 @@ public class Sandbox extends ApplicationAdapter {
         camera.position.lerp(new Vector3(player.pos.x + player.width / 2, player.pos.y + player.height / 2, 0), 0.1f);
 		camera.update();
 
-        //Collections.sort(island.entities);
-        Collections.sort(dungeon.entities);
+        islandManager.sortEntities();
 
         batch.setProjectionMatrix(camera.combined);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -101,39 +96,9 @@ public class Sandbox extends ApplicationAdapter {
 
 		batch.begin();
 
-        // Draw all tiles in the chunk
-//        for(Tile[] tiles : island.chunk.tiles)
-//        {
-//            for(Tile tile : tiles)
-//            {
-//                batch.draw(tile.texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
-//                if (tile.secondaryTextures != null)
-//				{
-//				    for(Texture texture : tile.secondaryTextures)
-//						batch.draw(texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
-//				}
-//            }
-//        }
-//
-//        //Draw entities on island
-//        for(Entity e : island.entities)
-//            e.Draw(batch);
-
-        for(Tile[] tiles : dungeon.chunk.tiles)
-        {
-            for(Tile tile : tiles)
-            {
-                batch.draw(tile.texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
-                if (tile.secondaryTextures != null)
-                {
-                    for(Texture texture : tile.secondaryTextures)
-                        batch.draw(texture, tile.pos.x, tile.pos.y, tile.size, tile.size);
-                }
-            }
-        }
-        //Draw entities on island
-        for(Entity e : dungeon.entities)
-            e.Draw(batch);
+		islandManager.drawWorld(batch);
+		islandManager.drawEntities(batch);
+        islandManager.wakeEnemies();
 
         //UI
         batch.setProjectionMatrix(screenMatrix);
@@ -142,7 +107,7 @@ public class Sandbox extends ApplicationAdapter {
 
 		//Post render
 		box2D.tick(camera, control);
-		island.ClearRemovedEntities(box2D);
+		islandManager.world.ClearRemovedEntities(box2D);
 	}
 	
 	@Override
@@ -150,16 +115,11 @@ public class Sandbox extends ApplicationAdapter {
 		batch.dispose();
 	}
 
-	private void resetWorld()
+	private void reset()
     {
-//        island = new Island(box2D, 50, 15);
-//        player.Reset(box2D, island.GetPlayerSpawnPos());
-//        island.entities.add(player);
-//        box2D.PopulateEntityMap(island.entities);
-
-        dungeon = new Dungeon(box2D, 20, 5, 20);
-        player.Reset(box2D, dungeon.GetPlayerSpawnPos());
-        dungeon.entities.add(player);
-        box2D.PopulateEntityMap(dungeon.entities);
+        islandManager.resetWorld();
+        player.Reset(box2D, islandManager.world.GetPlayerSpawnPos());
+        islandManager.world.entities.add(player);
+        control.reset = false;
     }
 }

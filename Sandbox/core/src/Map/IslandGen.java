@@ -50,10 +50,6 @@ public class IslandGen {
         //Manually add seeds here
         //TODO: We can think of a better way to add seeds
         seeds.add(map.tiles[centerRow][centerCol]);
-//        seeds.add(map.tiles[centerRow-5][centerCol+30]);
-//        seeds.add(map.tiles[centerRow][centerCol-15]);
-//        seeds.add(map.tiles[centerRow+40][centerCol]);
-//        seeds.add(map.tiles[centerRow-35][centerCol]);
 
         //Generate map using seeds
         return(SmoothMap(seeds, iterations));

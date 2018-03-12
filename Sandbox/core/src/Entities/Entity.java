@@ -23,6 +23,7 @@ public class Entity implements Comparable<Entity> {
 
     public entityType type;
     public Vector3 pos;
+
     public Texture texture;
 
     public Inventory inventory;

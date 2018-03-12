@@ -24,7 +24,6 @@ public class Player extends Entity {
     String name;
 
     private ArrayList<Entity> interactEntities;
-    private Box2DWorld box2D;
 
     public Player(Vector3 pos, Box2DWorld box2D)
     {
@@ -38,7 +37,6 @@ public class Player extends Entity {
 
         inventory = new Inventory();
 
-        this.box2D = box2D;
         Reset(box2D, pos);
     }
 

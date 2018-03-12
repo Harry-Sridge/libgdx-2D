@@ -13,7 +13,7 @@ public class Enums {
 
     public enum entityType
     {
-        Player, Static, InteractiveStatic
+        Player, Enemy, Static, InteractiveStatic
 
     }
 

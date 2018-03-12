@@ -6,6 +6,7 @@ package com.sandbox.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Asset {
@@ -26,6 +27,9 @@ public class Asset {
 
     //Player
     public static Texture player_front, player_back, player_left, player_right;
+
+    //Enemies
+    public static Texture skull_front, skull_back, skull_left, skull_right;
 
     public static void Load()
     {
@@ -55,15 +59,22 @@ public class Asset {
         water_02 = new Texture("sprites/water/water_02.png");
         water_03 = new Texture("sprites/water/water_03.png");
         water_04 = new Texture("sprites/water/water_04.png");
+
         cliff = new Texture(Gdx.files.internal("sprites/cliff.png"));
         cliff_bottom = new Texture(Gdx.files.internal("sprites/cliff_bottom.png"));
 
         tree = new Texture("sprites/entities/tree.png");
         house = new Texture("sprites/entities/house.png");
+
         player_front = new Texture("sprites/entities/player/player_front.png");
         player_back = new Texture("sprites/entities/player/player_back.png");
         player_left = new Texture("sprites/entities/player/player_left.png");
         player_right = new Texture("sprites/entities/player/player_right.png");
+
+        skull_front = new Texture("sprites/entities/skull/skull_front.png");
+        skull_back = new Texture("sprites/entities/skull/skull_back.png");
+        skull_left = new Texture("sprites/entities/skull/skull_left.png");
+        skull_right = new Texture("sprites/entities/skull/skull_right.png");
 
     }
 
