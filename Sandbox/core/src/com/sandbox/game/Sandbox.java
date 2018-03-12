@@ -30,6 +30,8 @@ public class Sandbox extends ApplicationAdapter {
     private Dungeon dungeon;
 
     private Matrix4 screenMatrix;
+    
+    private FrameRate fps;
 
 	@Override
 	public void create ()
@@ -52,13 +54,19 @@ public class Sandbox extends ApplicationAdapter {
 
         Asset.Load();
 
+<<<<<<< HEAD
         island = new Island(box2D, 50, 5);
         dungeon = new Dungeon(box2D, 20, 3, 20);
+=======
+        island = new Island(box2D, 100, 40);
+        dungeon = new Dungeon(box2D, 100, 5, 20);
+>>>>>>> 53c6ea074fadcc494e72ee9ae33a76b50f26b17d
         islandManager = new WorldManager(box2D, island);
         player = new Player(islandManager.world.GetPlayerSpawnPos(), box2D);
         reset();
 
         screenMatrix = new Matrix4(batch.getProjectionMatrix());
+        fps = new FrameRate();
 	}
 
 	@Override
@@ -105,6 +113,9 @@ public class Sandbox extends ApplicationAdapter {
 		//Post render
 		box2D.tick(camera, control);
 		islandManager.world.ClearRemovedEntities(box2D);
+		
+		fps.update();
+		fps.render();
 	}
 	
 	@Override
