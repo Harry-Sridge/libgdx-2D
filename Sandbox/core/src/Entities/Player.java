@@ -4,8 +4,8 @@ package Entities;
  * Created by zliu on 2018-02-16.
  */
 
-import Box2D.*;
-import Entities.Entity;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.sandbox.game.Asset;
@@ -13,9 +13,8 @@ import com.sandbox.game.Control;
 import com.sandbox.game.Enums.entityType;
 import com.sandbox.game.Inventory;
 
-import java.util.ArrayList;
-
-import static java.lang.Math.atan2;
+import Box2D.Box2DHelper;
+import Box2D.Box2DWorld;
 
 public class Player extends Entity {
 

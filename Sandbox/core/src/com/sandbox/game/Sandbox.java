@@ -1,9 +1,9 @@
 package com.sandbox.game;
 
-import Box2D.Box2DWorld;
-import Entities.Player;
-import Map.Dungeon;
-import Map.Island;
+/**
+ * Created by zliu on 2018-02-16.
+ */
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,6 +12,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
+import Box2D.Box2DWorld;
+import Entities.Player;
+import Map.Dungeon;
+import Map.Island;
 
 public class Sandbox extends ApplicationAdapter {
 
@@ -54,13 +58,8 @@ public class Sandbox extends ApplicationAdapter {
 
         Asset.Load();
 
-<<<<<<< HEAD
         island = new Island(box2D, 50, 5);
         dungeon = new Dungeon(box2D, 20, 3, 20);
-=======
-        island = new Island(box2D, 100, 40);
-        dungeon = new Dungeon(box2D, 100, 5, 20);
->>>>>>> 53c6ea074fadcc494e72ee9ae33a76b50f26b17d
         islandManager = new WorldManager(box2D, island);
         player = new Player(islandManager.world.GetPlayerSpawnPos(), box2D);
         reset();
@@ -75,7 +74,7 @@ public class Sandbox extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//Pre render
+		//Pre-render
 
         //CONTROLS
         if(control.reset)
@@ -91,8 +90,6 @@ public class Sandbox extends ApplicationAdapter {
         camera.position.lerp(new Vector3(player.pos.x + player.width / 2, player.pos.y + player.height / 2, 0), 0.1f);
 		camera.update();
 
-        islandManager.sortEntities();
-
         batch.setProjectionMatrix(camera.combined);
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -100,7 +97,7 @@ public class Sandbox extends ApplicationAdapter {
 		//TODO: current draw is not efficient, maybe use occlusion culling?
 
 		batch.begin();
-
+		islandManager.sortEntities();
 		islandManager.drawWorld(batch);
 		islandManager.drawEntities(batch);
         islandManager.wakeEnemies();

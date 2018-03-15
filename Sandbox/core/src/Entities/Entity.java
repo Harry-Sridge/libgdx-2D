@@ -1,7 +1,7 @@
 package Entities;
 
 /**
- * Created by Southridge on 2018-02-16.
+ * Created by zliu on 2018-02-16.
  */
 
 import Box2D.Box2DWorld;
@@ -40,14 +40,11 @@ public class Entity implements Comparable<Entity> {
         pos = new Vector3();
     }
 
-    //Draw a specific entity
     public void Draw(SpriteBatch batch)
     {
         batch.draw(texture, pos.x, pos.y, width, height);
     }
 
-    //Z sorting
-    //The player cannot go on top of trees
     public int compareTo(Entity entity)
     {
         float tempY = entity.pos.y;
